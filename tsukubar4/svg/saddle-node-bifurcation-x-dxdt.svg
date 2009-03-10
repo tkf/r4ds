@@ -13,7 +13,7 @@
    id="svg2"
    sodipodi:version="0.32"
    inkscape:version="0.46"
-   sodipodi:docname="saddle-node-bifurcation-stable.svg"
+   sodipodi:docname="saddle-node-bifurcation-x-dxdt.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape">
   <defs
      id="defs4">
@@ -37,7 +37,7 @@
      inkscape:pageshadow="2"
      inkscape:zoom="1.1576138"
      inkscape:cx="258.36521"
-     inkscape:cy="822.19765"
+     inkscape:cy="753.08998"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
