@@ -1,0 +1,429 @@
+\documentclass[14pt,dvipdfm]{beamer}
+% pdfの栞の字化けを防ぐ
+% \AtBeginDvi{\special{pdf:tounicode EUC-UCS2}}
+% テーマ
+\usetheme{AnnArbor}
+% navi. symbolsは目立たないが，dvipdfmxを使うと機能しないので非表示に
+\setbeamertemplate{navigation symbols}{} 
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+% フォントはお好みで
+\usepackage{txfonts}
+\usepackage{ulem}
+\usepackage{bm}
+\mathversion{bold}
+\renewcommand{\familydefault}{\sfdefault}
+\renewcommand{\kanjifamilydefault}{\gtdefault}
+\setbeamerfont{title}{size=\large,series=\bfseries}
+\setbeamerfont{frametitle}{size=\large,series=\bfseries}
+\setbeamertemplate{frametitle}[default][center]
+\usefonttheme{professionalfonts} 
+%
+\title{Rで分かる力学系}
+\subtitle{〜分岐の様子を可視化してみる〜}
+\author{新垣 貴史}
+\institute{早稲田大学}
+\date{2009年3月1日}
+
+\begin{document}
+\frame{\titlepage}
+
+\frame
+{
+  \frametitle{自己紹介}
+
+  \begin{itemize}
+  \item 名前: 新垣 貴史 (あらかき たかふみ)
+    \begin{itemize}
+    \item \alert{「あらかき」に濁点はつかない!}
+    \item タカフ, @tkf, id:tkf41, (id:artk ← 消したい)
+    \end{itemize}
+  \item 大学: 早稲田大学 理工学部 機械工学科
+    \begin{itemize}
+    \item 4月から 修士1年
+    \end{itemize}
+  \item ブログ: ナンクル力学系\\
+    \begin{itemize}
+    \item http://arataka.wordpress.com
+    \end{itemize}
+  \item 言語: Python, C/C++, PHP, Javascript
+    \begin{itemize}
+    \item Rは初心者
+    \end{itemize}
+  \item 研究: 認知ロボティクス / 認知力学系
+    \begin{itemize}
+    \item 人間の脳の働きをニューラルネットワークを用いてモデル化し、
+      それを組み込んだロボットを動かす
+    \end{itemize}
+  \end{itemize}
+}
+\frame
+{
+  \frametitle{はじめに}
+
+  \begin{itemize}
+  \item 力学系とは？
+    \begin{itemize}
+    \item<2-> この発表中は、力学系 = 常微分方程式 だと思ってOK
+    \item<3-> 本当は、常微分方程式 $\subset$ 力学系
+    \end{itemize}
+  \item 分岐現象とは？
+    \begin{itemize}
+    \item<4-> パラメタが変化 → 力学系の解が、がらっと変わる
+    \end{itemize}
+  \item なぜにR?
+
+    Rは、
+    \begin{itemize}
+    \item<5-> 計算が早い(風の噂)し、
+    \item<6-> グラフ描画が早い(体感)し、
+    \item<7-> \xout{変態}ユーザーがたくさんいる
+    \end{itemize}
+    ので、こいつで分岐現象を可視化してみるか!
+  \end{itemize}
+}
+\frame
+{
+  \frametitle{力学系}
+  \begin{itemize}
+  \item 3つの例を見ていきます
+  \end{itemize}
+
+  \begin{tabular}{|l|l|}
+    \hline
+    線形振動子
+    & $\ddot x = -  x$ \\
+    \hline
+    線形振動子 (減衰項つき)
+    & $\ddot x = -  x + c \dot x$ \\
+    \hline
+    Van der Pol 振動子 (非線形!)
+    & $\ddot x = -  x + c (1 - x^2) \dot x$ \\
+    \hline
+    Lorenz attractor (カオス!)
+    & $\dot x = \sigma (y - x)$ \\
+    & $\dot y = x (\rho - z) - y$ \\
+    & $\dot z = xy - \beta z $ \\
+    \hline
+  \end{tabular}
+}
+\frame
+{
+  \frametitle{力学系の例1: 振動子 }
+  $\ddot x = -  x$
+  \begin{center}
+    \includegraphics[height=0.5\textheight]{fig/l1.eps}
+  \end{center}
+  
+  \begin{itemize}
+  \item 解を相空間 ($(x,\dot x)$の空間) で描く
+  \item 対応関係がある: 系の状態 $\Leftrightarrow$ 相空間の一点
+  \item 周期解だと閉曲線になる
+  \end{itemize}
+}
+\frame
+{
+  \frametitle{力学系の例2: 減衰項ありの振動子 }
+  $\ddot x = - x + c \dot x$
+  \begin{center}
+    \includegraphics[height=0.5\textheight]{fig/l2.eps}
+  \end{center}
+  
+
+  \begin{itemize}
+  \item どの解も、原点 $(0,0)$ に落ち込む
+  \item ほかの解を引きつける解: \textbf{アトラクタ}
+  \item アトラクタが点 $\Rightarrow$ \textbf{平衡点 (平衡解)}
+  \end{itemize}
+}
+\frame
+{
+  \frametitle{力学系の例3: Van der Pol 振動子 }
+  $\ddot x = -  x + c (1 - x^2) \dot x$
+  \begin{center}
+    \includegraphics[height=0.5\textheight]{fig/vdp.eps}
+  \end{center}
+
+
+  \begin{itemize}
+  \item 全部の解が中央の閉曲線に向かっている
+  \item 周期解におちこむ $\Rightarrow$ アトラクタ
+  \item $\Rightarrow$ リミットサイクル!
+  \end{itemize}
+}
+\frame
+{
+  \frametitle{力学系の例4: Lorenz attractor}
+  \begin{center}
+    \includegraphics[height=0.5\textheight]{fig/lorenz.eps}
+  \end{center}
+
+  \begin{itemize}
+  \item 周期解でもなければ、平衡解でもない\\
+    不思議なアトラクタ $\Rightarrow$ ストレンジアトラクタ!
+  \end{itemize}
+}
+\frame
+{
+  \frametitle{アトラクタまとめ}
+  \begin{itemize}
+  \item (安定な) 平衡点
+  \item (安定な) リミットサイクル
+  \item ストレンジアトラクタ
+  \end{itemize}
+}
+\frame
+{
+  \frametitle{分岐(bifurcation)とは?}
+  \begin{itemize}
+  \item パラメタが変化 → 力学系の解が、がらっと変わる
+  \item 1次元の系について、例を2つ
+    \begin{itemize}
+    \item Saddle-Node Bifurcation \\
+      安定な解がいきなり現れる
+    \item Pitchfork Bifurcation \\
+      安定な解がいきなり2つになる
+    \end{itemize}
+  \end{itemize}
+}
+\frame
+{
+  \frametitle{例1: Saddle-Node Bifurcation (1/2)}
+  \begin{itemize}
+  \item 方程式: $\dot x = x^2 - r$
+  \item 平衡点は？
+    \begin{itemize}
+    \item $\dot x = 0$ になるような点
+    \item 計算! $\dot x = x^2 - rx= (x + r) (x - r)$
+    \item $x = \pm \sqrt{r}$ (ただし、$r > 0$ の場合のみ)
+    \end{itemize}
+  \item 平衡点を図を描いて探す
+  \end{itemize}
+
+  \begin{center}
+    \includegraphics[height=0.4\textheight]
+    {fig/saddle-node-bifurcation-x-dxdt.eps}
+  \end{center}
+}
+\frame
+{
+  \frametitle{例1: Saddle-Node Bifurcation (2/2)}
+  \begin{itemize}
+  \item 方程式: $\dot x = x^2 - r$
+  \item 解の様子
+    \begin{itemize}
+    \item (a) $r < 0$: ひたすら増加 (発散)
+    \item (b) $r = 0$:
+      \begin{itemize}
+      \item $x < 0$ からきたやつは $x=0$ に漸近
+      \item $x > 0$ ではひたすら増加 (発散)
+      \end{itemize}
+    \item (c) $r > 0$:
+      \begin{itemize}
+      \item $x < \sqrt{r}$ からきたやつは $x=0$ に漸近
+      \item $x > \sqrt{r}$ ではひたすら増加 (発散)
+      \end{itemize}
+    \end{itemize}
+  \end{itemize}
+
+  \begin{center}
+    \includegraphics[height=0.3\textheight]
+    {fig/saddle-node-bifurcation-x-dxdt.eps}
+  \end{center}
+}
+\frame
+{
+  \frametitle{例2: Pitchfork Bifurcation (1/2)}
+  \begin{itemize}
+  \item 方程式: $\dot x = - x^3 + rx$
+  \item 平衡点は？
+    \begin{itemize}
+    \item $\dot x = 0$ になるような点
+    \item 計算! $\dot x = - x^3 + rx = - \frac{x}{3}(x + r)(x - r)$
+    \item $x = \pm \sqrt{r}$ (ただし、$r > 0$ の場合のみ)
+    \item $x = 0$ はつねに平衡点
+    \end{itemize}
+  \item 平衡点を図を描いて探す
+  \end{itemize}
+
+  \begin{center}
+    \includegraphics[height=0.4\textheight]
+    {fig/pitchfork-bifurcation-x-dxdt.eps}
+  \end{center}
+}
+\frame
+{
+  \frametitle{例2: Pitchfork Bifurcation (2/2)}
+  \begin{itemize}
+  \item 方程式: $\dot x = - x^3 + rx$
+  \item 解の様子
+    \begin{itemize}
+    \item (a) $r < 0$: $x=0$ に漸近
+    \item (b) $r = 0$: $x=0$ に漸近
+    \item (c) $r > 0$:
+      \begin{itemize}
+      \item $x < 0$ からきたやつは $x=-\sqrt{r}$ に漸近
+      \item $x > 0$ からきたやつは $x=+\sqrt{r}$ に漸近
+      \item $x = 0$ は平衡点 (不安定)
+      \end{itemize}
+    \end{itemize}
+  \end{itemize}
+
+  \begin{center}
+    \includegraphics[height=0.3\textheight]
+    {fig/pitchfork-bifurcation-x-dxdt.eps}
+  \end{center}
+}
+\frame
+{
+  \frametitle{色々な系の分岐の様子を見ていくよ!}
+  やっと準備ができましたー
+}
+\frame
+{
+  \frametitle{R\"ossler Attractor の式}
+  \begin{eqnarray*}
+    \dot x &=& -y -z\\
+    \dot y &=& x + ay\\
+    \dot z &=& b + (c - x)z
+  \end{eqnarray*}
+
+  \begin{itemize}
+  \item 非線形性は、$\dot z$の式の、$xz$から
+  \end{itemize}
+}
+\frame
+{
+  \frametitle{R\"ossler Attractor}
+
+  \begin{center}
+    \begin{tabular}{lll}
+      \includegraphics[height=0.2\textheight]{fig/rosser-0.eps} &
+      \includegraphics[height=0.2\textheight]{fig/rosser-1.eps} &
+      \includegraphics[height=0.2\textheight]{fig/rosser-2.eps} \\
+      (a) $c = 4$ & (b) $c = 6$ & (c) $c = 8.5$ \\
+      \includegraphics[height=0.2\textheight]{fig/rosser-3.eps} &
+      \includegraphics[height=0.2\textheight]{fig/rosser-4.eps} &
+      \includegraphics[height=0.2\textheight]{fig/rosser-5.eps} \\
+      (d) $c = 8.7$ & (e) $c = 9$ & (f) $c = 12$ \\
+      \includegraphics[height=0.2\textheight]{fig/rosser-6.eps} &
+      \includegraphics[height=0.2\textheight]{fig/rosser-7.eps} &
+      \includegraphics[height=0.2\textheight]{fig/rosser-8.eps} \\
+      (g) $c = 12.8$ & (h) $c = 13$ & (i) $c = 18$ \\
+    \end{tabular}
+  \end{center}
+}
+\frame
+{
+  \frametitle{Chua's Circuit}
+  \begin{eqnarray*}
+    \dot x &=&   c_1 (y - x - g(x) ) \\
+    \dot y &=&   c_2 (x - y + z    ) \\
+    \dot z &=& - c_3 y
+  \end{eqnarray*}
+  ただし、$g(x) = m_1 x + \frac{m_0 - m_1}{2} (|x+1| - |x-1|)$
+
+  \begin{itemize}
+  \item 非線形性は、$g(x)$から
+  \end{itemize}
+
+%%  $g(x)$ は、こんな関数:
+}
+\frame
+{
+  \frametitle{Chua's Circuitのアトラクタ}
+  \begin{center}
+    \begin{tabular}{lll}
+      \includegraphics[height=0.3\textheight]{fig/chua-0.eps} &
+      \includegraphics[height=0.3\textheight]{fig/chua-1.eps} &
+      \includegraphics[height=0.3\textheight]{fig/chua-2.eps} \\
+      (a) $c_3 = 50$ & (b) $c_3 = 35$ & (c) $c_3 = 33.8$ \\
+      \includegraphics[height=0.3\textheight]{fig/chua-3.eps} &
+      \includegraphics[height=0.3\textheight]{fig/chua-4.eps} &
+      \includegraphics[height=0.3\textheight]{fig/chua-5.eps} \\
+      (d) $c_3 = 33.6$ & (e) $c_3 = 33$ & (f) $c_3 = 25.58$ \\
+    \end{tabular}
+  \end{center}
+}
+\frame
+{
+  \frametitle{CTRNN (3 nodes)}
+  \begin{eqnarray*}
+    \tau_i \dot x_i = - x_i + \sum_{j=1}^{n} w_{ij} \tanh (x_j + b_j)
+  \end{eqnarray*}
+  ただし、ここでは$n=3$
+
+  \begin{itemize}
+  \item 非線形性は、$\tanh$から
+  \end{itemize}
+
+%  $\tanh$ は、こんな関数:
+}
+\frame
+{
+  \frametitle{CTRNN (3 nodes)のアトラクタ}
+
+  \begin{center}
+    \begin{tabular}{llll} 
+      & $\tau_3 = 1.0$ & $\tau_3 = 2.0$ & $\tau_3 = 3.0$ \\
+      $\tau_2 = 1.0$&
+      \includegraphics[height=0.15\textheight]{fig/ctrnn-0.eps} &
+      \includegraphics[height=0.15\textheight]{fig/ctrnn-1.eps} &
+      \includegraphics[height=0.15\textheight]{fig/ctrnn-2.eps} \\
+      $\tau_2 = 1.9$&
+      \includegraphics[height=0.15\textheight]{fig/ctrnn-3.eps} &
+      \includegraphics[height=0.15\textheight]{fig/ctrnn-4.eps} &
+      \includegraphics[height=0.15\textheight]{fig/ctrnn-5.eps} \\
+      $\tau_2 = 2.0$&
+      \includegraphics[height=0.15\textheight]{fig/ctrnn-6.eps} &
+      \includegraphics[height=0.15\textheight]{fig/ctrnn-7.eps} &
+      \includegraphics[height=0.15\textheight]{fig/ctrnn-8.eps} \\
+      $\tau_2 = 4.0$&
+      \includegraphics[height=0.15\textheight]{fig/ctrnn-9.eps} &
+      \includegraphics[height=0.15\textheight]{fig/ctrnn-10.eps} &
+      \includegraphics[height=0.15\textheight]{fig/ctrnn-11.eps} \\
+    \end{tabular}
+  \end{center}
+}
+\frame
+{
+  \frametitle{まとめ}
+  \begin{itemize}
+  \item<2-> 力学系について説明した
+    \begin{itemize}
+    \item 解を描くときは相空間で！
+    \item 3つのアトラクタ:\\
+      平衡点, リミットサイクル, ストレンジアトラクタ
+    \end{itemize}
+  \item<3-> 分岐について説明した:
+    \begin{itemize}
+    \item Saddle-Node Bifurcation \\
+    \item Pitchfork Bifurcation \\
+    \end{itemize}
+  \item<4-> パラメタの変化による分岐を可視化した
+  \item<5-> グラフは全部Rで書いた
+  \end{itemize}
+}
+\frame
+{
+  \frametitle{参考文献}
+  \begin{itemize}
+  \item Kathleen T. Alligood， Tim Sauer， James A. Yorke,
+    ``Chaos: An Introduction to Dynamical Systems'', 
+    Springer, 1997
+  \item Steven H. Strogatz,
+    ``Nonlinear Dynamics and Chaos:
+    With Applications to Physics, Biology, Chemistry, and Engineering'',
+    Westview Pr, 2001
+  \item Randall D. Beer,
+    ``On the Dynamics of Small Continuous-Time Recurrent Neural Networks'',
+    Adaptive Behavior, Vol. 3, No. 4, 469-509 (1995)
+  \end{itemize}
+}
+\end{document}
+%%% Local Variables: 
+%%% mode: japanese-latex
+%%% TeX-master: t
+%%% coding: euc-jp
+%%% End: 
